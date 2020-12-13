@@ -40,8 +40,12 @@ namespace UniversityWebApplication.Controllers
         {
             try
             {
-                categories.Add(newCategory);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    categories.Add(newCategory);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(newCategory);
             }
             catch
             {
@@ -62,9 +66,13 @@ namespace UniversityWebApplication.Controllers
         {
             try
             {
-                categories.RemoveAll(existingCategory => existingCategory.Id == id);
-                categories.Add(editedCategory);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    categories.RemoveAll(existingCategory => existingCategory.Id == id);
+                    categories.Add(editedCategory);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(editedCategory);
             }
             catch
             {

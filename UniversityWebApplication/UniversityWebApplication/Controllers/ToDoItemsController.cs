@@ -41,8 +41,12 @@ namespace UniversityWebApplication.Controllers
         {
             try
             {
-                toDoItems.Add(newToDoItem);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    toDoItems.Add(newToDoItem);
+                    return RedirectToAction(nameof(Index));
+                } 
+                return View(newToDoItem);
             }
             catch
             {
@@ -63,9 +67,13 @@ namespace UniversityWebApplication.Controllers
         {
             try
             {
-                toDoItems.RemoveAll(existingToDoItem => existingToDoItem.Id == id);
-                toDoItems.Add(editedToDoItem);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    toDoItems.RemoveAll(existingToDoItem => existingToDoItem.Id == id);
+                    toDoItems.Add(editedToDoItem);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(editedToDoItem);
             }
             catch
             {
