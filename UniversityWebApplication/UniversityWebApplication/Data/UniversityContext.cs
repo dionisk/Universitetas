@@ -15,5 +15,14 @@ namespace UniversityWebApplication.Data
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<ToDoItem> ToDoItems { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ToDoItem>().Property(s => s.Status).HasConversion<string>();
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }

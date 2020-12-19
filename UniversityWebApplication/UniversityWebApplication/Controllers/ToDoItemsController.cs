@@ -4,28 +4,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UniversityWebApplication.Data;
 using UniversityWebApplication.Models;
 
 namespace UniversityWebApplication.Controllers
 {
     public class ToDoItemsController : Controller
     {
+        private readonly UniversityContext context;
 
-        private static List<ToDoItem> toDoItems = new List<ToDoItem>
+        public ToDoItemsController(UniversityContext context)
         {
-            new ToDoItem {Id = 1, Name = "To create ToDoItem list", Description = "To create list to initialize the list", Priority = 1}
-        };
+            this.context = context;
+        }
 
         // GET: ToDoItemsController
         public ActionResult Index()
         {
-            return View(toDoItems);
+            return View(context.ToDoItems);
         }
 
         // GET: ToDoItemsController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View(toDoItems.Find(existingToDoItem => existingToDoItem.Id == id));
+            return View(await context.ToDoItems.FindAsync(id));
         }
 
         // GET: ToDoItemsController/Create
@@ -43,7 +45,8 @@ namespace UniversityWebApplication.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    toDoItems.Add(newToDoItem);
+                    context.ToDoItems.Add(newToDoItem);
+                    context.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 } 
                 return View(newToDoItem);
@@ -55,9 +58,9 @@ namespace UniversityWebApplication.Controllers
         }
 
         // GET: ToDoItemsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View(toDoItems.Find(existingToDoItem => existingToDoItem.Id == id));
+            return View(await context.ToDoItems.FindAsync(id));
         }
 
         // POST: ToDoItemsController/Edit/5
@@ -69,8 +72,8 @@ namespace UniversityWebApplication.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    toDoItems.RemoveAll(existingToDoItem => existingToDoItem.Id == id);
-                    toDoItems.Add(editedToDoItem);
+                    context.ToDoItems.Update(editedToDoItem);
+                    context.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 }
                 return View(editedToDoItem);
@@ -82,9 +85,9 @@ namespace UniversityWebApplication.Controllers
         }
 
         // GET: ToDoItemsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View(toDoItems.Find(existingToDoItem => existingToDoItem.Id == id));
+            return View(await context.ToDoItems.FindAsync(id));
         }
 
         // POST: ToDoItemsController/Delete/5
@@ -94,7 +97,8 @@ namespace UniversityWebApplication.Controllers
         {
             try
             {
-                toDoItems.RemoveAll(existingToDoItem => existingToDoItem.Id == id);
+                context.ToDoItems.Remove(deletedToDoItem);
+                context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
