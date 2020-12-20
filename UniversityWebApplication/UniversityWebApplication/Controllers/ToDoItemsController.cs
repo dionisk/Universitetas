@@ -41,6 +41,7 @@ namespace UniversityWebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ToDoItem newToDoItem)
         {
+            newToDoItem.CreationDate = DateTime.Now;
             try
             {
                 if (ModelState.IsValid)
