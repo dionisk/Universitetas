@@ -22,8 +22,9 @@ namespace UniversityWebApplication.Models
         public string Name { get; set; }
         [StringLength(150)]
         public string Description { get; set; }
-        public DateTime? CreationDate { get; set; }  
-        public DateTime DeadLineDate { get; set; }
+        public DateTime? CreationDate { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? DeadLineDate { get; set; }
         [Required]
         [Range(1, 5)]
         [DefaultValue(3)]

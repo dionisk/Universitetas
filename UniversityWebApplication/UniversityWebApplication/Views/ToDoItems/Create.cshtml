@@ -21,16 +21,21 @@
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
-            </div> 
+            </div>
             @Html.HiddenFor(m => m.CreationDate)
-                <div class="form-group">
-                    <label asp-for="Priority" class="control-label"></label>
-                    @Html.DropDownListFor(m => m.Priority, Enumerable.Range(1, 5).Select(x => new SelectListItem { Value = x.ToString(), Text = x.ToString(), Selected = x == 3 }), new { @class = "form-control" })
-                    <span asp-validation-for="Priority" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                </div>
+            <div class="form-group">
+                <label asp-for="DeadLineDate" class="control-label"></label>
+                <input asp-for="DeadLineDate" class="form-control" />
+                <span asp-validation-for="DeadLineDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Priority" class="control-label"></label>
+                @Html.DropDownListFor(m => m.Priority, Enumerable.Range(1, 5).Select(x => new SelectListItem { Value = x.ToString(), Text = x.ToString(), Selected = x == 3 }), new { @class = "form-control" })
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
         </form>
     </div>
 </div>
