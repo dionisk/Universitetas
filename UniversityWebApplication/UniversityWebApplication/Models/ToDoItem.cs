@@ -29,7 +29,7 @@ namespace UniversityWebApplication.Models
         [Range(1, 5)]
         [DefaultValue(3)]
         public int Priority { get; set; }
-        [DefaultValue(1)]
+        [DefaultValue(ToDoItemStatus.Backlog)]
         public ToDoItemStatus Status { get; set; }
 
     }

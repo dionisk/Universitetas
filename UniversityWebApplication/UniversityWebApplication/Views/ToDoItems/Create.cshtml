@@ -30,8 +30,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Priority" class="control-label"></label>
-                @Html.DropDownListFor(m => m.Priority, Enumerable.Range(1, 5).Select(x => new SelectListItem { Value = x.ToString(), Text = x.ToString(), Selected = x == 3 }), new { @class = "form-control" })
+                @Html.DropDownListFor(m => m.Priority, Enumerable.Range(1, 5).Select(x => new SelectListItem { Value = x.ToString(), Text = x.ToString()}), new { @class = "form-control" })
                 <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                @Html.DropDownList("Status", Html.GetEnumSelectList<ToDoItemStatus>(), new { @class = "form-control" })                
+                <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

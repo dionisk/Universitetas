@@ -33,7 +33,10 @@ namespace UniversityWebApplication.Controllers
         // GET: ToDoItemsController/Create
         public ActionResult Create()
         {
-            return View();
+            ToDoItem toDoItem = new ToDoItem();
+            toDoItem.Status = ToDoItemStatus.Backlog;
+            toDoItem.Priority = 3;
+            return View(toDoItem);
         }
 
         // POST: ToDoItemsController/Create
