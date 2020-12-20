@@ -33,9 +33,12 @@ namespace UniversityWebApplication.Controllers
         // GET: ToDoItemsController/Create
         public ActionResult Create()
         {
-            ToDoItem toDoItem = new ToDoItem();
-            toDoItem.Status = ToDoItemStatus.Backlog;
-            toDoItem.Priority = 3;
+            ToDoItem toDoItem = new ToDoItem
+            {
+                CreationDate = DateTime.Now,
+                Status = ToDoItemStatus.Backlog,
+                Priority = 3
+            };
             return View(toDoItem);
         }
 
@@ -44,7 +47,6 @@ namespace UniversityWebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ToDoItem newToDoItem)
         {
-            newToDoItem.CreationDate = DateTime.Now;
             try
             {
                 if (ModelState.IsValid)
