@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UniversityWebApplication.Data;
 using UniversityWebApplication.Models;
 
@@ -21,13 +22,13 @@ namespace UniversityWebApplication.Controllers
         // GET: ToDoItemsController
         public ActionResult Index()
         {
-            return View(context.ToDoItems);
+            return View(context.ToDoItems.Include(p => p.Category));
         }
 
         // GET: ToDoItemsController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            return View(await context.ToDoItems.FindAsync(id));
+            return View(await context.ToDoItems.Include(p => p.Category).FirstAsync(p => p.Id == id));
         }
 
         // GET: ToDoItemsController/Create
@@ -39,19 +40,20 @@ namespace UniversityWebApplication.Controllers
                 Status = ToDoItemStatus.Backlog,
                 Priority = 3
             };
+            ViewBag.Categories = context.Categories.ToList();
             return View(toDoItem);
         }
 
         // POST: ToDoItemsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ToDoItem newToDoItem)
+        public async Task<ActionResult> Create(ToDoItem newToDoItem)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    context.ToDoItems.Add(newToDoItem);
+                    await context.ToDoItems.AddAsync(newToDoItem);
                     context.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 } 
@@ -66,7 +68,8 @@ namespace UniversityWebApplication.Controllers
         // GET: ToDoItemsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            return View(await context.ToDoItems.FindAsync(id));
+            ViewBag.Categories = context.Categories.ToList();
+            return View(await context.ToDoItems.Include(p => p.Category).FirstAsync(p => p.Id == id));
         }
 
         // POST: ToDoItemsController/Edit/5
@@ -93,7 +96,7 @@ namespace UniversityWebApplication.Controllers
         // GET: ToDoItemsController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            return View(await context.ToDoItems.FindAsync(id));
+            return View(await context.ToDoItems.Include(p => p.Category).FirstAsync(p => p.Id == id));
         }
 
         // POST: ToDoItemsController/Delete/5

@@ -40,13 +40,13 @@ namespace UniversityWebApplication.Controllers
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Category newCategory)
+        public async Task<ActionResult> Create(Category newCategory)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    context.Categories.Add(newCategory);
+                    await context.Categories.AddAsync(newCategory);
                     context.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 }
