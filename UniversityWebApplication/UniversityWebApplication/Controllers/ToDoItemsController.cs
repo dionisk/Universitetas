@@ -4,45 +4,60 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using UniversityWebApplication.Data;
 using UniversityWebApplication.Models;
 
 namespace UniversityWebApplication.Controllers
 {
     public class ToDoItemsController : Controller
     {
+        private readonly UniversityContext context;
 
-        private static List<ToDoItem> toDoItems = new List<ToDoItem>
+        public ToDoItemsController(UniversityContext context)
         {
-            new ToDoItem {Id = 1, Name = "To create ToDoItem list", Description = "To create list to initialize the list", Priority = 1}
-        };
+            this.context = context;
+        }
 
         // GET: ToDoItemsController
         public ActionResult Index()
         {
-            return View(toDoItems);
+            return View(context.ToDoItems.Include(p => p.Category));
         }
 
         // GET: ToDoItemsController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View(toDoItems.Find(existingToDoItem => existingToDoItem.Id == id));
+            return View(await context.ToDoItems.Include(p => p.Category).FirstAsync(p => p.Id == id));
         }
 
         // GET: ToDoItemsController/Create
         public ActionResult Create()
         {
-            return View();
+            ToDoItem toDoItem = new ToDoItem
+            {
+                CreationDate = DateTime.Now,
+                Status = ToDoItemStatus.Backlog,
+                Priority = 3
+            };
+            ViewBag.Categories = context.Categories.ToList();
+            return View(toDoItem);
         }
 
         // POST: ToDoItemsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ToDoItem newToDoItem)
+        public async Task<ActionResult> Create(ToDoItem newToDoItem)
         {
             try
             {
-                toDoItems.Add(newToDoItem);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    await context.ToDoItems.AddAsync(newToDoItem);
+                    context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                } 
+                return View(newToDoItem);
             }
             catch
             {
@@ -51,9 +66,10 @@ namespace UniversityWebApplication.Controllers
         }
 
         // GET: ToDoItemsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View(toDoItems.Find(existingToDoItem => existingToDoItem.Id == id));
+            ViewBag.Categories = context.Categories.ToList();
+            return View(await context.ToDoItems.Include(p => p.Category).FirstAsync(p => p.Id == id));
         }
 
         // POST: ToDoItemsController/Edit/5
@@ -63,9 +79,13 @@ namespace UniversityWebApplication.Controllers
         {
             try
             {
-                toDoItems.RemoveAll(existingToDoItem => existingToDoItem.Id == id);
-                toDoItems.Add(editedToDoItem);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    context.ToDoItems.Update(editedToDoItem);
+                    context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(editedToDoItem);
             }
             catch
             {
@@ -74,9 +94,9 @@ namespace UniversityWebApplication.Controllers
         }
 
         // GET: ToDoItemsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View(toDoItems.Find(existingToDoItem => existingToDoItem.Id == id));
+            return View(await context.ToDoItems.Include(p => p.Category).FirstAsync(p => p.Id == id));
         }
 
         // POST: ToDoItemsController/Delete/5
@@ -86,7 +106,8 @@ namespace UniversityWebApplication.Controllers
         {
             try
             {
-                toDoItems.RemoveAll(existingToDoItem => existingToDoItem.Id == id);
+                context.ToDoItems.Remove(deletedToDoItem);
+                context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

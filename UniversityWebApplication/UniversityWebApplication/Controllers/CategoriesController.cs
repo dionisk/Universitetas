@@ -4,27 +4,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UniversityWebApplication.Data;
 using UniversityWebApplication.Models;
+using UniversityWebApplication.Providers;
 
 namespace UniversityWebApplication.Controllers
 {
     public class CategoriesController : Controller
     {
 
-        private static List<Category> categories = new List<Category>
+        private readonly UniversityContext context;
+
+        public CategoriesController(UniversityContext context)
         {
-            new Category {Id = 1, Name = "General"}
-        };
+            this.context = context;
+        }
         // GET: CategoriesController
         public ActionResult Index()
         {
-            return View(categories);
+            return View(context.Categories);
         }
 
         // GET: CategoriesController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View(categories.Find(existingCategory => existingCategory.Id == id));
+            return View(await context.Categories.FindAsync(id));
         }
 
         // GET: CategoriesController/Create
@@ -36,12 +40,17 @@ namespace UniversityWebApplication.Controllers
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Category newCategory)
+        public async Task<ActionResult> Create(Category newCategory)
         {
             try
             {
-                categories.Add(newCategory);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    await context.Categories.AddAsync(newCategory);
+                    context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(newCategory);
             }
             catch
             {
@@ -50,9 +59,9 @@ namespace UniversityWebApplication.Controllers
         }
 
         // GET: CategoriesController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View(categories.Find(existingCategory => existingCategory.Id == id));
+            return View(await context.Categories.FindAsync(id));
         }
 
         // POST: CategoriesController/Edit/5
@@ -62,9 +71,13 @@ namespace UniversityWebApplication.Controllers
         {
             try
             {
-                categories.RemoveAll(existingCategory => existingCategory.Id == id);
-                categories.Add(editedCategory);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    context.Update(editedCategory);
+                    context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(editedCategory);
             }
             catch
             {
@@ -75,17 +88,18 @@ namespace UniversityWebApplication.Controllers
         // GET: CategoriesController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View(categories.Find(existingCategory => existingCategory.Id == id));
+            return View(context.Categories.Find(id));
         }
 
         // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Category deletedCategory)
         {
             try
             {
-                categories.RemoveAll(existingCategory => existingCategory.Id == id);
+                context.Categories.Remove(deletedCategory);
+                context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
