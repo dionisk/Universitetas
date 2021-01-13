@@ -3,31 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversityWebApplication.Models;
+using UniversityWebApplication.Providers;
 
 namespace UniversityWebApplication.Services
 {
     public class ToDoService : IToDoService
     {
-        public List<ToDoItem> ToDoItems { get; set; }
+        public InMemoryDataProvider<ToDoItem> ToDoItemProvider { get; set; }
 
         public ToDoService()
         {
-            ToDoItems = new List<ToDoItem>();
+            ToDoItemProvider = new InMemoryToDoItemProvider();
         }
 
         public void Add(ToDoItem ToDoItem)
         {
-            ToDoItems.Add(ToDoItem);
+            ToDoItemProvider.Add(ToDoItem);
         }
 
-        public void Delete(ToDoItem ToDoItem)
+        public void Delete(int id)
         {
-            ToDoItems.Remove(ToDoItem);
+            ToDoItemProvider.Remove(id);
         }
 
-        public void Edit(ToDoItem ToDoItem, int Id, string Name, string Description, DateTime CreationDate, DateTime DeadLineDate, int Priority, ToDoItemStatus Status, int CategoryId)
+        public void Edit(ToDoItem ToDoItem)
         {
-            
+            ToDoItemProvider.Update(ToDoItem);
         }
     }
 }
