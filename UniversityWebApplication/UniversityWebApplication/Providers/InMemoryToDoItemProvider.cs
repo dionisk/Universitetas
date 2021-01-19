@@ -11,6 +11,23 @@ namespace UniversityWebApplication.Providers
         public InMemoryToDoItemProvider() : base()
         {
 
+
+        }
+
+        public bool HasItemWithTheSameName(ToDoItem toDoItem)
+        {
+            bool HasItemWithTheSameName = false;
+            foreach (ToDoItem ItemInCollection in Data)
+            {
+
+                if (toDoItem.Name.Equals(ItemInCollection.Name))
+                {
+                    HasItemWithTheSameName = true;
+                    break;
+                }
+
+            }
+            return HasItemWithTheSameName;
         }
     }
 }

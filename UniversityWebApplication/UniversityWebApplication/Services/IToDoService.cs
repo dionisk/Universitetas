@@ -9,7 +9,7 @@ namespace UniversityWebApplication.Services
 {
     public interface IToDoService
     {
-        public InMemoryDataProvider<ToDoItem> ToDoItemProvider { get; set; }
+        public InMemoryToDoItemProvider ToDoItemProvider { get; set; }
         public void Add(ToDoItem ToDoItem);
 
         public void Edit(ToDoItem ToDoItem);

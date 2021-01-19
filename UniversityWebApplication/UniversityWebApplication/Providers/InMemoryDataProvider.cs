@@ -3,29 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversityWebApplication.Exceptions;
+using UniversityWebApplication.Models;
 
 namespace UniversityWebApplication.Providers
 {
     public class InMemoryDataProvider<DataClass> : IDataProvider<DataClass> where DataClass : IHasId
     {
-        private static int MaxId = -1;
 
-        private List<DataClass> data = new List<DataClass>();
+        public InMemoryDataProvider()
+            {
+                Data = new List<DataClass>();
+            }
+
+    private static int MaxId = -1;
+
+        public List<DataClass> Data { get; set; }
 
         public void Add(DataClass item)
         {
             item.Id = ++MaxId;
-            data.Add(item);
+            Data.Add(item);
         }
+
+        
 
         public List<DataClass> GetAll()
         {
-            return data;
+            return Data;
         }
 
         public DataClass Get(int id)
         {
-            DataClass item = data.Find(d => d.Id == id);
+            DataClass item = Data.Find(d => d.Id == id);
             if (item == null)
             {
                 throw new ProviderHasNoDataException(item.Id);
@@ -38,8 +47,8 @@ namespace UniversityWebApplication.Providers
             DataClass oldItem = Get(item.Id);
             if (item != null)
             {
-                data.Remove(oldItem);
-                data.Add(item);
+                Data.Remove(oldItem);
+                Data.Add(item);
             }
             else
             {
@@ -52,12 +61,13 @@ namespace UniversityWebApplication.Providers
             DataClass item = Get(id);
             if (item != null)
             {
-                data.Remove(item);
+                Data.Remove(item);
             }
             else
             {
                 throw new ProviderHasNoDataException(id);
             }
         }
+
     }
 }
