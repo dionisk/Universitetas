@@ -19,15 +19,15 @@ namespace UniversityWebApplication.Services
 
         public void Add(ToDoItem ToDoItem)
         {
-            if (!ToDoItemProvider.HasItemWithTheSameName(ToDoItem))
+            try
             {
+                ToDoItemProvider.CheckForUniqueNameWhileAddingNewItem(ToDoItem.Name);
                 ToDoItemProvider.Add(ToDoItem);
             }
-            else
+            catch (Exception)
             {
-                throw new ToDoItemProviderHasAlreadyTheSameNameException(ToDoItem.Name);
-            }
-            
+                throw;
+            }                                                 
         }
 
         
@@ -39,7 +39,15 @@ namespace UniversityWebApplication.Services
 
         public void Edit(ToDoItem ToDoItem)
         {
-            ToDoItemProvider.Update(ToDoItem);
+            try
+            {
+                ToDoItemProvider.CheckForUniqueNameWhileUpdatingExistingItem(ToDoItem);
+                ToDoItemProvider.Update(ToDoItem);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

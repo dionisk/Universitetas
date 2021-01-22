@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UniversityWebApplication.Exceptions;
 using UniversityWebApplication.Models;
 using UniversityWebApplication.Services;
@@ -18,7 +18,7 @@ namespace XUnitTestProject_ToDoServices_homework4
         }
 
         [Fact]
-        public void ToDoService_Add_ShouldBeOK()
+        public void AddToDoItem_PassValidData_ShouldBeOK()
         {
             //Arrange
             SetupProvider();
@@ -33,7 +33,7 @@ namespace XUnitTestProject_ToDoServices_homework4
         }
 
         [Fact]
-        public void ToDoService_Add_ShouldThrow_ToDoItemProviderHasAlreadyTheSameNameException()
+        public void AddToDoItem_PassDublikateName__Throws_ToDoItemProviderHasAlreadyTheSameNameException()
         {
             //Arrange
             SetupProvider();
@@ -41,6 +41,42 @@ namespace XUnitTestProject_ToDoServices_homework4
 
             //Act and Assert
             Assert.Throws<ToDoItemProviderHasAlreadyTheSameNameException>(() => ToDoService.Add(ToDoItemWithTheSameName));
+        }
+
+        [Fact]
+        public void UpdateItem_PassValidData_ItemWithChangedNameExistsInList()
+        {
+            //Arrange
+            SetupProvider();
+            ToDoItem updatedItem = new ToDoItem { Id = 2, Name = "Make BIG money", Description = "nice one", CreationDate = new DateTime(2021, 01, 02), DeadLineDate = new DateTime(2022, 12, 30), Priority = 4, Status = ToDoItemStatus.Wip, CategoryId = 2 };
+
+            //Act
+            ToDoService.Edit(updatedItem);
+
+            //Assert
+            bool IsItemNameUpdated = ToDoService.ToDoItemProvider.Data.Exists(t => t.Name == updatedItem.Name);
+            Assert.True(IsItemNameUpdated);
+        }
+
+
+        [Fact]
+        public void UpdateItem_PassValidData_ItemWithChangedNameExistsInList_2()
+        {
+
+            // Šitas testas yra kopija aukščiau esančio testo "UpdateItem_PassValidData_ItemWithChangedNameExistsInList".
+            // Tačiau jei tas testas vykdosi sėkmingai, tai šitas failina (meta NullReferenceException). Klausimas, kodėl?
+
+
+            //Arrange
+            SetupProvider();
+            ToDoItem updatedItem = new ToDoItem { Id = 2, Name = "Make BIG money", Description = "nice one", CreationDate = new DateTime(2021, 01, 02), DeadLineDate = new DateTime(2022, 12, 30), Priority = 4, Status = ToDoItemStatus.Wip, CategoryId = 2 };
+
+            //Act
+            ToDoService.Edit(updatedItem);
+
+            //Assert
+            bool IsItemNameUpdated = ToDoService.ToDoItemProvider.Data.Exists(t => t.Name == updatedItem.Name);
+            Assert.True(IsItemNameUpdated);
         }
     }
 }

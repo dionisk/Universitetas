@@ -7,7 +7,7 @@ namespace UniversityWebApplication.Exceptions
 {
     public class ToDoItemProviderHasAlreadyTheSameNameException : Exception
     {
-        public ToDoItemProviderHasAlreadyTheSameNameException(string name) : base($"Item with name {name} already exists.")
+        public ToDoItemProviderHasAlreadyTheSameNameException(string name) : base($"Item with name \"{name}\" already exists.")
         {
 
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UniversityWebApplication.Exceptions;
 using UniversityWebApplication.Models;
 
 namespace UniversityWebApplication.Providers
@@ -14,20 +15,32 @@ namespace UniversityWebApplication.Providers
 
         }
 
-        public bool HasItemWithTheSameName(ToDoItem toDoItem)
+        public void CheckForUniqueNameWhileAddingNewItem(string toDoItemName)
         {
-            bool HasItemWithTheSameName = false;
+            foreach (ToDoItem ItemInCollection in Data)
+            {
+
+                if (toDoItemName.Equals(ItemInCollection.Name))
+                {
+                    throw new ToDoItemProviderHasAlreadyTheSameNameException(toDoItemName);
+                }
+            }
+        }
+
+        public void CheckForUniqueNameWhileUpdatingExistingItem(ToDoItem toDoItem)
+        {
+            ToDoItem oldItem = Get(toDoItem.Id);
+            Data.Remove(oldItem);
             foreach (ToDoItem ItemInCollection in Data)
             {
 
                 if (toDoItem.Name.Equals(ItemInCollection.Name))
                 {
-                    HasItemWithTheSameName = true;
-                    break;
+                    Data.Add(oldItem);
+                    throw new ToDoItemProviderHasAlreadyTheSameNameException(toDoItem.Name);
                 }
-
             }
-            return HasItemWithTheSameName;
+            Data.Add(oldItem);
         }
     }
 }
