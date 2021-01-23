@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using UniversityWebApplication.Providers;
 
 namespace UniversityWebApplication.Models
 {
@@ -15,7 +16,7 @@ namespace UniversityWebApplication.Models
         Done,
         Archived
     }
-    public class ToDoItem
+    public class ToDoItem : IHasId
     {
         public int Id { get; set; }
         [Required]
@@ -33,8 +34,8 @@ namespace UniversityWebApplication.Models
         [DefaultValue(ToDoItemStatus.Backlog)]
         public ToDoItemStatus Status { get; set; }       
         public int? CategoryId { get; set; }
-        [ForeignKey("CategoryId")]
-        [DisplayName("Category")]
+
+
         public virtual Category Category { get; set; }
 
     }
