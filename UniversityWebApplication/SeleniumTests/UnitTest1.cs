@@ -10,11 +10,9 @@ namespace SeleniumTests
         [Fact]
         public void LoadLocalhost()
         {
-            using (IWebDriver driver = new ChromeDriver())
-            {
-                driver.Navigate().GoToUrl("https://www.google.com"); //užkrauna
-                driver.Navigate().GoToUrl("https://localhost:44310/"); //neužkrauna
-            }
+            using IWebDriver driver = new ChromeDriver();
+            //driver.Navigate().GoToUrl("https://www.google.com"); //užkrauna
+            driver.Navigate().GoToUrl("https://localhost:44310/"); //neužkrauna
         }
     }
 }
