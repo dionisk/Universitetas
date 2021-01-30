@@ -11,8 +11,12 @@ namespace SeleniumTests
         public void LoadLocalhost()
         {
             using IWebDriver driver = new ChromeDriver();
-            //driver.Navigate().GoToUrl("https://www.google.com"); //uûkrauna
-            driver.Navigate().GoToUrl("https://localhost:44310/"); //neuûkrauna
+            //driver.Navigate().GoToUrl("https://www.google.com"); //u≈ækrauna
+
+            driver.Navigate().GoToUrl("https://localhost:44310/Home/Index/"); //neu≈ækrauna
+
+            driver.Navigate().GoToUrl("https://localhost:44310/"); //neu≈ækrauna
+
         }
     }
 }
