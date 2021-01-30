@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UniversityWebApplication.Data;
 using UniversityWebApplication.Models;
@@ -40,7 +41,7 @@ namespace UniversityWebApplication.Controllers
                 Status = ToDoItemStatus.Backlog,
                 Priority = 3
             };
-            ViewBag.Categories = context.Categories.ToList();
+            ViewData["CategoryId"] = new SelectList(context.Categories, "Id", "Name");
             return View(toDoItem);
         }
 
@@ -68,7 +69,7 @@ namespace UniversityWebApplication.Controllers
         // GET: ToDoItemsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            ViewBag.Categories = context.Categories.ToList();
+            ViewData["CategoryId"] = new SelectList(context.Categories, "Id", "Name");
             return View(await context.ToDoItems.Include(p => p.Category).FirstAsync(p => p.Id == id));
         }
 

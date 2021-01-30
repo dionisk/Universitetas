@@ -15,8 +15,6 @@ namespace SeleniumTests
 
             driver.Navigate().GoToUrl("https://localhost:44310/Home/Index/"); //neužkrauna
 
-            driver.Navigate().GoToUrl("https://localhost:44310/"); //neužkrauna
-
         }
     }
 }
